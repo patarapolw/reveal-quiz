@@ -1,3 +1,5 @@
+# Reveal Quiz
+
 ## Editor
 
 ```
@@ -27,3 +29,7 @@ cd packages/editor && yarn link
 ```
 
 Now you can use `yarn link @reveal-quiz/editor` anywhere.
+
+## Example repo
+
+See <https://github.com/patarapolw/zhsrs>
