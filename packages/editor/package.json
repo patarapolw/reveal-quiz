@@ -1,6 +1,6 @@
 {
   "name": "@reveal-quiz/editor",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "private": true,
   "main": "dist/cli.js",
@@ -18,7 +18,7 @@
     "prepack": "yarn build:src && yarn build:web"
   },
   "dependencies": {
-    "@reveal-quiz/reveal": "*",
+    "@reveal-quiz/reveal": "^0.1.0",
     "dree": "^2.3.3",
     "express": "^4.17.1",
     "open": "^7.0.0",
