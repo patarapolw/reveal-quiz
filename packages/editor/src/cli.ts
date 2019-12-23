@@ -14,12 +14,6 @@ const { argv } = yargs
       describe: 'Path to the file or directory to read',
     })
   })
-  .option('edit', {
-    alias: 'e',
-    type: 'boolean',
-    default: false,
-    describe: 'Edit the file in editor',
-  })
   .option('port', {
     alias: 'p',
     type: 'number',
@@ -46,14 +40,14 @@ const { argv } = yargs
       : true
   })
 
-let { edit, fileOrDir, port, open } = argv
+let { fileOrDir, port, open } = argv
 let dirTree
 let root = fileOrDir!
 
 if (fs.statSync(fileOrDir!).isDirectory()) {
   dirTree = dreeScan(fileOrDir!, {
     extensions: ['md'],
-    exclude: [/\.git/, /node_modules/],
+    exclude: [/\.git/, /node_modules/, /\.cache/, /dist/],
   })
   fileOrDir = undefined
 } else {
@@ -61,7 +55,6 @@ if (fs.statSync(fileOrDir!).isDirectory()) {
 }
 
 initServer({
-  edit,
   filename: fileOrDir,
   dirTree,
   root,

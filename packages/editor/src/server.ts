@@ -2,7 +2,6 @@ import path from 'path'
 import express, { Router } from 'express'
 import bodyParser from 'body-parser'
 import open from 'open'
-import qs from 'querystring'
 import fs from 'fs'
 import { Dree } from 'dree'
 
@@ -12,7 +11,6 @@ export function initServer (config: {
   filename?: string
   port: number
   open?: boolean
-  edit?: boolean
 }) {
   const app = express()
 
@@ -53,13 +51,7 @@ export function initServer (config: {
     console.log(`Server running at http://localhost:${config.port}`)
 
     if (config.open) {
-      if (!config.filename || config.edit) {
-        open(`http://localhost:${config.port}/`)
-      } else {
-        open(`http://localhost:${config.port}/reveal/?${qs.stringify({
-          filename: config.filename,
-        })}`)
-      }
+      open(`http://localhost:${config.port}/`)
     }
   })
 }

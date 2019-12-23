@@ -81,11 +81,16 @@ async function main () {
   const url = new URL(location.href)
   const filename = url.searchParams.get('filename')
   if (filename) {
+    const config = await fetch('/api/').then((r) => r.json())
+
     const { data, content } = matter(await fetch(`/api/data?${qs.stringify({
       filename,
     })}`).then((r) => r.text()))
     defaults = {
-      headers: data,
+      headers: {
+        ...data,
+        ...(config.reveal || {}),
+      },
       markdown: content,
     }
 

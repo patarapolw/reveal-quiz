@@ -1,5 +1,22 @@
 # Reveal Quiz
 
+## Quizzing
+
+```
+reveal-quiz [options] <fileOrDir>
+
+Read file or directory or in the editor
+
+Positionals:
+  fileOrDir  Path to the file or directory to read
+
+Options:
+  --help      Show help                                                [boolean]
+  --version   Show version number                                      [boolean]
+  --port, -p  Port to run the server                   [number] [default: 24000]
+  --no-open   Do not open the browser after running the server         [boolean]
+```
+
 ## Editor
 
 ```
@@ -13,7 +30,6 @@ Positionals:
 Options:
   --help      Show help                                                [boolean]
   --version   Show version number                                      [boolean]
-  --edit, -e  Edit the file in editor                 [boolean] [default: false]
   --port, -p  Port to run the server                   [number] [default: 24000]
   --no-open   Do not open the browser after running the server         [boolean]
 ```
@@ -25,10 +41,11 @@ git clone https://github.com/patarapolw/reveal-quiz.git
 cd reveal-quiz
 yarn
 yarn prepack
-cd packages/editor && yarn link
+cd packages/editor && yarn link && cd -
+cd packages/quiz && yarn link && cd -
 ```
 
-Now you can use `yarn link @reveal-quiz/editor` anywhere.
+Now you can use `yarn link @reveal-quiz/editor` and `yarn link @reveal-quiz/quiz` anywhere.
 
 ## Example repo
 

@@ -9,7 +9,6 @@ Positionals:
 Options:
   --help      Show help                                                [boolean]
   --version   Show version number                                      [boolean]
-  --edit, -e  Edit the file in editor                 [boolean] [default: false]
   --port, -p  Port to run the server                   [number] [default: 24000]
   --no-open   Do not open the browser after running the server         [boolean]
 ```
