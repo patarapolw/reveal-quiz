@@ -5,7 +5,7 @@
   "private": true,
   "main": "dist/cli.js",
   "bin": {
-    "reveal-editor": "dist/cli.js"
+    "reveal-quiz": "dist/cli.js"
   },
   "files": [
     "dist"

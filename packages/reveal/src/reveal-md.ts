@@ -125,15 +125,17 @@ async function main () {
     }
   }
 
-  if (document.readyState === 'complete') {
-    new RevealMd(defaults)
-  } else {
-    document.onreadystatechange = () => {
-      if (document.readyState === 'complete') {
-        new RevealMd(defaults)
+  setTimeout(() => {
+    if (document.readyState === 'complete') {
+      new RevealMd(defaults)
+    } else {
+      document.onreadystatechange = () => {
+        if (document.readyState === 'complete') {
+          new RevealMd(defaults)
+        }
       }
     }
-  }
+  }, 100)
 }
 
 export default class RevealMd {
