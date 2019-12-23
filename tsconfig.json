@@ -1,0 +1,3 @@
+{
+  "extends": "packages/editor/web/tsconfig.json"
+}

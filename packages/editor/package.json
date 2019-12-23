@@ -1,0 +1,35 @@
+{
+  "name": "@reveal-quiz/editor",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "main": "dist/cli.js",
+  "bin": {
+    "reveal-editor": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "node dist/cli.js",
+    "help": "node dist/cli.js --help",
+    "build:src": "tsc",
+    "build:web": "cd web && yarn build",
+    "prepack": "yarn build:src && yarn build:web"
+  },
+  "dependencies": {
+    "@reveal-quiz/reveal": "*",
+    "dree": "^2.3.3",
+    "express": "^4.17.1",
+    "open": "^7.0.0",
+    "reveal.js": "^3.8.0",
+    "yargs": "^15.0.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.2",
+    "@types/yargs": "^13.0.3",
+    "cors": "^2.8.5",
+    "typescript": "^3.7.4"
+  }
+}

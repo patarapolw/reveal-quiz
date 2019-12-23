@@ -1,0 +1,35 @@
+{
+  "name": "@reveal-quiz/reveal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "license": "MIT",
+  "files": [
+    "dist",
+    "index.html",
+    "index.js"
+  ],
+  "scripts": {
+    "prepack": "webpack"
+  },
+  "devDependencies": {
+    "@types/hyperscript": "0.0.3",
+    "@types/node": "^12.12.21",
+    "@types/reveal": "^3.3.33",
+    "@types/showdown": "^1.9.3",
+    "css-loader": "^3.4.0",
+    "es6-json-stable-stringify": "^2.0.2",
+    "gray-matter": "^4.0.2",
+    "hyperpug": "^0.2.1",
+    "hyperscript": "^2.0.2",
+    "sass": "^1.24.0",
+    "sass-loader": "^8.0.0",
+    "scope-css": "^1.2.1",
+    "showdown": "^1.9.1",
+    "style-loader": "^1.1.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
+  }
+}
