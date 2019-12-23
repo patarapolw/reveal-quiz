@@ -22,8 +22,7 @@ Options:
 git clone https://github.com/patarapolw/reveal-quiz.git
 cd reveal-quiz
 yarn
-cd packages/editor/web && yarn && cd -
-yarn build
+yarn prepack
 cd packages/editor && yarn link
 ```
 

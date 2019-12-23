@@ -14,7 +14,7 @@
     "start": "node dist/cli.js",
     "help": "node dist/cli.js --help",
     "build:src": "tsc",
-    "build:web": "cd web && yarn build",
+    "build:web": "cd web && yarn && yarn build",
     "prepack": "yarn build:src && yarn build:web"
   },
   "dependencies": {

@@ -25,9 +25,8 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "lerna exec -- yarn build",
+    "prepack": "lerna exec -- yarn prepack",
     "lerna:publish": "lerna publish",
-    "lint": "eslint .",
-    "help": "cd packages/cli && yarn run help"
+    "lint": "eslint ."
   }
 }
