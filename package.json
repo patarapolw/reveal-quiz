@@ -24,9 +24,8 @@
     "vue-eslint-parser": "^7.0.0"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
     "prepack": "lerna exec -- yarn prepack",
-    "lerna:publish": "lerna publish",
+    "publish-all": "lerna publish",
     "lint": "eslint ."
   }
 }

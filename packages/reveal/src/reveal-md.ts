@@ -32,6 +32,9 @@ export interface ISlide {
   id: string
   type: 'hidden' | 'global' | 'regular'
   html: string
+  comment: {
+    [key: string]: string[]
+  }
   raw: string
 }
 
@@ -140,9 +143,10 @@ async function main () {
 
 export default class RevealMd {
   _headers: RevealOptions | null = null
-  _queue: Array<(r?: RevealStatic) => void> = []
   _markdown: string = ''
-  _raw: ISlide[][] = [[]]
+
+  queue: Array<(r?: RevealStatic) => void> = []
+  raw: ISlide[][] = [[]]
 
   defaults = {
     reveal: {
@@ -191,7 +195,7 @@ export default class RevealMd {
 
     let xOffset = 0
     const newRaw = s.split(/\r?\n===\r?\n/g).map((el, x) => {
-      this._raw[x] = this._raw[x] || []
+      this.raw[x] = this.raw[x] || []
       const newRawSs = el.split(/\r?\n--\r?\n/g).map((ss) => this.parseSlide(ss))
       if (newRawSs.every((ss) => !ss.html)) {
         xOffset++
@@ -211,7 +215,7 @@ export default class RevealMd {
         let section = this.getSlide(x)
         let subSection = this.getSlide(x, y)
 
-        if (!this._raw[x][y] || (this._raw[x][y] && this._raw[x][y].raw !== thisRaw.raw)) {
+        if (!this.raw[x][y] || (this.raw[x][y] && this.raw[x][y].raw !== thisRaw.raw)) {
           const container = document.createElement('div')
           container.className = 'container'
           container.innerHTML = thisRaw.html
@@ -244,7 +248,7 @@ export default class RevealMd {
       }).filter((el) => el)
     }).filter((el) => el && el.length > 0) as ISlide[][]
 
-    this._raw.map((el, x) => {
+    this.raw.map((el, x) => {
       el.map((ss, j) => {
         const y = el.length - j - 1
 
@@ -264,7 +268,7 @@ export default class RevealMd {
       }
     })
 
-    this._raw = newRaw
+    this.raw = newRaw
   }
 
   get title () {
@@ -345,8 +349,8 @@ export default class RevealMd {
             },
           ],
         })
-        if (this._queue.length > 0) {
-          this._queue.forEach(it => it(reveal))
+        if (this.queue.length > 0) {
+          this.queue.forEach(it => it(reveal))
           reveal.slide(-1, -1, -1)
           reveal.sync()
         }
@@ -357,7 +361,7 @@ export default class RevealMd {
       }
     } else {
       if (fn) {
-        this._queue.push(fn)
+        this.queue.push(fn)
       }
 
       setTimeout(() => {
@@ -373,46 +377,57 @@ export default class RevealMd {
 
   parseSlide (text: string): ISlide {
     const id = hash(text)
-    const raw = text
+    let raw = text
     let type: 'hidden' | 'global' | 'regular' = 'regular'
     let html = text
-    const [firstLine, ...lines] = html.split('\n')
-    const newType = firstLine.substr(3)
-    if (newType === 'hidden') {
-      type = 'hidden'
-      return { html: '', raw, id, type }
-    } else if (newType === 'global') {
-      type = 'global'
-      html = lines.join('\n')
+    const comment: {
+      [key: string]: string[]
+    } = {}
+    const lines: string[] = []
+
+    for (const line of html.split('\n')) {
+      if (line.startsWith('// ')) {
+        const [k, v] = line.substr(3).split(/=(.+)/)
+        comment[k] = [...(comment[k] || []), v || '']
+        continue
+      }
+
+      lines.push(line)
     }
 
-    html = html.replace(/(?:^|\n)\/\/ css=([A-Za-z0-9\-_]+\.css)(?:$|\n)/g, (p0, ref: string) => {
-      const i = raw.indexOf(p0)
-      const globalEl = document.getElementById('global') as HTMLDivElement
-      const className = `ref${i}`
+    raw = lines.join('\n')
 
-      let el = globalEl.querySelector(`style.ref.${className}`)
-      if (!el) {
-        el = document.createElement('style')
-        el.classList.add('ref', className)
-        globalEl.appendChild(el)
-      }
+    if (comment.hidden) {
+      type = 'hidden'
+      return { html: '', comment, raw, id, type }
+    }
 
-      fetch(parseUrl(ref)).then((r) => r.text()).then((content) => {
-        if (type !== 'global') {
-          content = scopeCss(content, `#${id}`)
+    if (comment.global) {
+      type = 'global'
+    }
+
+    if (comment.css) {
+      comment.css.forEach((ref, i) => {
+        const globalEl = document.getElementById('global') as HTMLDivElement
+        const className = `ref${i}`
+
+        let el = globalEl.querySelector(`style.ref.${className}`)
+        if (!el) {
+          el = document.createElement('style')
+          el.classList.add('ref', className)
+          globalEl.appendChild(el)
         }
-        el!.innerHTML = content
+
+        fetch(parseUrl(ref)).then((r) => r.text()).then((content) => {
+          if (type !== 'global') {
+            content = scopeCss(content, `#${id}`)
+          }
+          el!.innerHTML = content
+        })
       })
+    }
 
-      return ''
-    })
-
-    html = html.replace(/(?:^|\n)(\/\/ slide\n)?```(\S+)\n([^]+?)\n```(?:$|\n)/g, (p0, subtype, lang, content) => {
-      if (type !== 'global' && !subtype) {
-        return p0
-      }
-
+    html = html.replace(/(?:^|\n)```(\S+) parsed\n([^]+?)\n```(?:$|\n)/g, (p0, lang, content) => {
       if (lang === 'css') {
         const globalEl = document.getElementById('global') as HTMLDivElement
         if (type !== 'global') {
@@ -439,13 +454,14 @@ export default class RevealMd {
 
     if (type === 'global') {
       document.body.insertAdjacentHTML('beforeend', html)
-      return { html: '', raw, id, type }
+      return { html: '', comment, raw, id, type }
     }
 
     return {
       html: h(`#${id}`, {
         innerHTML: this.mdConvert(html),
       }).outerHTML,
+      comment,
       raw,
       id,
       type,
@@ -465,6 +481,24 @@ export default class RevealMd {
     }
 
     return hSlide
+  }
+
+  build () {
+    const headers = this.headers
+    const markdown = this.raw.map((ss) => {
+      return ss.map((s) => {
+        return [
+          Object.entries(s.comment).map(([k, vs]) => {
+            return vs.map((v) => {
+              return v ? `// ${k}=${v}` : `// ${k}`
+            }).join('\n')
+          }).join('\n'),
+          s.raw,
+        ].join('\n')
+      }).join('\n--\n')
+    }).join('\n===\n')
+
+    return matter.stringify(markdown, headers)
   }
 }
 

@@ -47,7 +47,7 @@ let root = fileOrDir!
 if (fs.statSync(fileOrDir!).isDirectory()) {
   dirTree = dreeScan(fileOrDir!, {
     extensions: ['md'],
-    exclude: [/\.git/, /node_modules/, /\.cache/, /dist/],
+    exclude: [/\.git/, /node_modules/, /\.cache/, /dist/, /src/, /^\./],
   })
   fileOrDir = undefined
 } else {

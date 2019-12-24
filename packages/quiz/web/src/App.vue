@@ -4,7 +4,7 @@
     span.mr-3 Press F to enter fullscreen
     .ml-auto
       b-button.mr-3(variant="light" @click="showTreeview = !showTreeview") {{showTreeview ? "Show treeview" : "Hide treeview"}}
-  .editor(:class="showTreeview ? 'w-50' : 'hidden'")
+  .deck-viewer(:class="showTreeview ? 'w-50' : 'hidden'")
     treeview(v-if="dirTree" :items="dirTree.children" @filename="filename = $event")
   iframe(ref="iframe" :src="iframeUrl" frameborder="0"
   :class="showTreeview ? 'w-50' : 'w-100'")
@@ -105,7 +105,10 @@ iframe {
     left: 50vw;
   }
 }
-.editor {
+.deck-viewer {
   height: calc(100vh - 60px) !important;
+  border-right: 1px solid gray;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 </style>
